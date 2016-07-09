@@ -22,14 +22,18 @@ const generatePromiseTimeout = (name, timeout = 5000) => new Promise(res => {// 
   }, timeout);
 });
 
+const closeMenu = () => {
+  document.querySelector('.collapse.navbar-collapse').classList.remove('in');
+};
+
 const routes = [
   { pattern: '/', handler: homeHandler },
-  { pattern: '/router', handler: routerHandler },
+  { pattern: '/router', handler: routerHandler, mounted: closeMenu },
   { pattern: /^\/router\/user\/([^\/?#]+)\/([^\/?#]+)$/i, handler: routerHandler },
   { pattern: '/router/posts/:category/:title/edit', handler: routerHandler },
   { pattern: '/router/resolve', handler: generateHandler('/router/resolve'), resolve: generatePromiseTimeout('/router/resolve') },
-  { pattern: '/accelerometer', handler: accelerometerHandler, resolve: resolveDeviceOrientation() },
-  { pattern: '/multitouch-mouse-drag', handler: dragHandler, resolve: resolveDeviceOrientation() },
+  { pattern: '/accelerometer', handler: accelerometerHandler, resolve: resolveDeviceOrientation(), mounted: closeMenu },
+  { pattern: '/multitouch-mouse-drag', handler: dragHandler, resolve: resolveDeviceOrientation(), mounted: closeMenu },
   { pattern: '*', handler: generateHandler('CAPTURE ALL', homeHandler) }
 ];
 

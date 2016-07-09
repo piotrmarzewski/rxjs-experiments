@@ -99,17 +99,19 @@ describe('micro-router', () => {
         { pattern: '/hello/world', handler: () => ({}) },
         { pattern: /^\/hie\/universe/, handler: () => ({}) },
         { pattern: '/hello/:name', handler: () => ({}) },
+        { pattern: '/with/mounted', handler: () => ({}), mounted: () => ({}) },
         { pattern: '*', handler: () => ({}) }
       ];
       it('should return a array', () => {
-        expect(normalizeRoutes(routes)).to.have.lengthOf(4);
+        expect(normalizeRoutes(routes)).to.have.lengthOf(5);
       });
       it('should return a populated array', () => {
         const normalizedRoutes = normalizeRoutes(routes);
-        expect(normalizedRoutes[0]).to.contain.all.keys(['matcher', 'handler', 'resolve']);
-        expect(normalizedRoutes[1]).to.contain.all.keys(['matcher', 'handler', 'resolve']);
-        expect(normalizedRoutes[2]).to.contain.all.keys(['matcher', 'handler', 'resolve']);
-        expect(normalizedRoutes[3]).to.contain.all.keys(['matcher', 'handler', 'resolve']);
+        expect(normalizedRoutes[0]).to.contain.all.keys(['matcher', 'handler', 'resolve', 'mounted']);
+        expect(normalizedRoutes[1]).to.contain.all.keys(['matcher', 'handler', 'resolve', 'mounted']);
+        expect(normalizedRoutes[2]).to.contain.all.keys(['matcher', 'handler', 'resolve', 'mounted']);
+        expect(normalizedRoutes[2]).to.contain.all.keys(['matcher', 'handler', 'resolve', 'mounted']);
+        expect(normalizedRoutes[4]).to.contain.all.keys(['matcher', 'handler', 'resolve', 'mounted']);
       });
     });
   });
@@ -118,23 +120,29 @@ describe('micro-router', () => {
       { pattern: '/hello/world', handler: () => ({}) },
       { pattern: /^\/hie\/universe/, handler: () => ({}) },
       { pattern: '/hello/:name', handler: () => ({}) },
+      { pattern: '/with/mounted', handler: () => ({}), mounted: () => ({}) },
       { pattern: '*', handler: () => ({}) }
     ];
     const matchMount = compileMatchMount(normalizeRoutes(routes));
     it('should match /hello/world', () => {
-      expect(matchMount('/hello/world')).to.contain.all.keys(['params', 'handler', 'resolve']);
+      expect(matchMount('/hello/world')).to.contain.all.keys(['params', 'handler', 'resolve', 'mounted']);
       expect(matchMount('/hello/world').params).to.eql({});
     });
     it('should match /hie/universe', () => {
-      expect(matchMount('/hie/universe')).to.contain.all.keys(['params', 'handler', 'resolve']);
+      expect(matchMount('/hie/universe')).to.contain.all.keys(['params', 'handler', 'resolve', 'mounted']);
       expect(matchMount('/hie/universe').params).to.eql({});
     });
     it('should match /hello/topheman', () => {
-      expect(matchMount('/hello/topheman')).to.contain.all.keys(['params', 'handler', 'resolve']);
+      expect(matchMount('/hello/topheman')).to.contain.all.keys(['params', 'handler', 'resolve', 'mounted']);
       expect(matchMount('/hello/topheman').params).to.eql({ name: 'topheman' });
     });
+    it('should match /with/mounted AND have a function in .mounted', () => {
+      expect(matchMount('/with/mounted')).to.contain.all.keys(['params', 'handler', 'resolve', 'mounted']);
+      expect(matchMount('/with/mounted').params).to.eql({});
+      expect(matchMount('/with/mounted').mounted).to.be.a('function');
+    });
     it('should match /whatever', () => {
-      expect(matchMount('/whatever')).to.contain.all.keys(['params', 'handler', 'resolve']);
+      expect(matchMount('/whatever')).to.contain.all.keys(['params', 'handler', 'resolve', 'mounted']);
       expect(matchMount('/whatever').params).to.eql({});
     });
   });

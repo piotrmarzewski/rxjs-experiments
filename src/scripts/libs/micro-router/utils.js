@@ -83,7 +83,8 @@ export const normalizeRoutes = (routes) => routes.map(route => {
   return {
     matcher: compilePattern(route.pattern),
     handler: route.handler,
-    resolve: route.resolve
+    resolve: route.resolve,
+    mounted: route.mounted
   };
 });
 
@@ -100,6 +101,7 @@ export const compileMatchMount = (routes) => (pathname) => {// eslint-disable-li
         result.push({
           handler: route.handler,
           resolve: route.resolve,
+          mounted: route.mounted,
           params
         });
       }

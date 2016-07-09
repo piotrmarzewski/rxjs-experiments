@@ -48,6 +48,9 @@ export const router = (createHistory, options) => {
           currentLocationPathname = location.pathname;
           unmountHandler = mount.handler({ location, params: mount.params, history });
           invariant(!(typeof unmountHandler === 'undefined'), `Handler matching ${location.pathname} should return an unmount function.`);
+          if (typeof mount.mounted === 'function') {
+            mount.mounted();
+          }
         });
       }
       else {
@@ -55,6 +58,9 @@ export const router = (createHistory, options) => {
         currentLocationPathname = location.pathname;
         unmountHandler = mount.handler({ location, params: mount.params, history });
         invariant(!(typeof unmountHandler === 'undefined'), `Handler matching ${location.pathname} should return an unmount function.`);
+        if (typeof mount.mounted === 'function') {
+          mount.mounted();
+        }
       }
     }
   });
